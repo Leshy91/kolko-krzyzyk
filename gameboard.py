@@ -16,6 +16,7 @@ class game_board:
 
 
     def draw_board(self):
+        print()
         print(" ", end='')
         for i in range(3):
             print(f" {i} ", end='')
@@ -28,6 +29,17 @@ class game_board:
             k += 1
             print()
         print()
+
+
+    def load_board(self, saved_list):
+        self.board.clear()
+        ind = 9
+        for i in range(3):
+            help_list = []
+            for j in range(3):
+                help_list.append(saved_list[ind])
+                ind += 1
+            self.board.append(help_list)
 
 
     def make_mark(self, col, row, mark):

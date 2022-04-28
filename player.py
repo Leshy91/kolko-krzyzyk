@@ -6,6 +6,7 @@ class Player:
         self.name = input(f"Tworzenie gracza z symbolem {mark}, podaj swoje imię: ")
         self.points = 0
         self.mark = ' ' + mark + ' '
+        self.if_moved = False
         print(f"\nUtworzono nowego gracza: {self.name}\n")
 
 
@@ -23,5 +24,6 @@ class Player:
                 self.coordinates = [self.col, self.row]
                 return self.coordinates
             except ValueError:
+                print('\a')
                 print("Niewłaściwa wartość! Spróbuj jeszcze raz")
                 return self.make_move()

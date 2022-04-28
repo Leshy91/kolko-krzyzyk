@@ -30,10 +30,11 @@ while True:
     elif menu_choice == '2':
         print("Wczytaj grę\n")
         print("Wersja demo. Aby korzystać z wszystkich opcji wykup pełną wersję programu\n")
+        new_game.load_game(Player1, Player2)
 
     elif menu_choice == '3':
         print("Zapisz grę\n")
-        new_game.save_game(Player1.name, Player1.mark, Player1.points, Player2.name, Player2.mark, Player2.points)
+        new_game.save_game(Player1.name, Player1.mark, Player1.points, Player1.if_moved, Player2.name, Player2.mark, Player2.points, Player2.if_moved)
 
     elif menu_choice == '4':
         print("Powtórka\n")
