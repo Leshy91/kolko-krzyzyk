@@ -1,0 +1,3 @@
+
+class NotInRangeError(Exception):
+    pass

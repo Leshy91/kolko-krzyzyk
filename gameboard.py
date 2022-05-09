@@ -1,117 +1,109 @@
 
-class game_board:
+class GameBoard:
 
-    def __init__(self):
+    def __init__(self, size):
         print("\nTworzenie planszy...\n")
         self.board = []
-
+        self.size = size
 
     def make_board(self):
         self.board.clear()
-        for i in range(3):
-            help_list = []
-            for j in range(3):
-                help_list.append(' - ')
+        for _ in range(self.size):
+            help_list = [' - ' for _ in range(self.size)]
             self.board.append(help_list)
+        # self.board = [' - ' for _ in range(self.size) for _ in range (self.size)]
 
-
-    def draw_board(self):
+    def __str__(self):
         print()
         print(" ", end='')
-        for i in range(3):
-            print(f" {i} ", end='')
+        for i in range(self.size):
+            print(f" {i + 1} ", end='')
         print()
-        k = 0
-        for i in self.board:
-            print(k, end='')
+        for k, i in enumerate(self.board):
+            print(k + 1, end='')
             for j in i:
                 print(j, end='')
-            k += 1
             print()
-        print()
-
+        return '\n'
 
     def load_board(self, saved_list):
         self.board.clear()
-        ind = 9
-        for i in range(3):
+        ind = 9   # od tej pozycji w pliku save zaczynają się znaki na tablicy zapisanej gry
+        for i in range(self.size):
             help_list = []
-            for j in range(3):
+            for j in range(self.size):
                 help_list.append(saved_list[ind])
                 ind += 1
             self.board.append(help_list)
 
-
-    def make_mark(self, col, row, mark):
-        self.col = col
-        self.row = row
+    def make_mark(self, coordinates, mark):
         try:
-            if self.board[row][col] == ' - ':
-                self.board[row][col] = mark
+            if coordinates[1] < 0 or coordinates[0] < 0:
+                raise IndexError()
+            elif self.board[coordinates[1]][coordinates[0]] == ' - ':
+                self.board[coordinates[1]][coordinates[0]] = mark
                 return True
             else:
+                print("\nWskazana komórka jest już zajęta! SPróbuj wybrać inne pole.")
                 return False
         except IndexError:
-                return False
-
+            print(f"\nWskazane pole znajduje się poza obszarem planszy! Spróbuj jeszcze raz wpisując wartości w "
+                  f"przedziale od 1 do {self.size}")
+            return False
 
     def if_full(self):
-        self.work_list = []
+        work_list = []
         for i in self.board:
             for j in i:
                 if j == ' - ':
-                    self.work_list.append(j)
-                else:
-                    pass
-        return len(self.work_list)
+                    work_list.append(j)
+        return len(work_list)
 
-
-    def if_win(self, mark):
         # wygrana w rzędach
+    def win_in_row(self, mark):
         for row in self.board:
-            self.work_list = []
+            work_list = []
             for item in row:
                 if item == mark:
-                    self.work_list.append(item)
-                else:
-                    pass
-            if len(self.work_list) == 3:
+                    work_list.append(item)
+            if len(work_list) == self.size:
                 return True
-            else:
-                pass
+
         # wygrana w kolumnach
-        for i in range(3):
-            self.work_list = []
+    def win_in_col(self, mark):
+        for i in range(self.size):
+            work_list = []
             for row in self.board:
                 if row[i] == mark:
-                    self.work_list.append(row[i])
-                else:
-                    pass
-            if len(self.work_list) == 3:
+                    work_list.append(row[i])
+            if len(work_list) == self.size:
                 return True
-            else:
-                pass
+
         # wygrana na krzyż
-        self.j = 2
-        self.work_list = []
+    def win_in_cross(self, mark):
+        j = self.size - 1
+        work_list = []
         for row in self.board:
-            if row[self.j] == mark:
-                self.work_list.append(row[self.j])
-                self.j -= 1
+            if row[j] == mark:
+                work_list.append(row[j])
+                j -= 1
             else:
                 break
-        if len(self.work_list) == 3:
+        if len(work_list) == self.size:
             return True
 
-        self.j = 0
-        self.work_list.clear()
+        j = 0
+        work_list.clear()
         for row in self.board:
-            if row[self.j] == mark:
-                self.work_list.append(row[self.j])
-                self.j += 1
+            if row[j] == mark:
+                work_list.append(row[j])
+                j += 1
             else:
                 break
-        if len(self.work_list) == 3:
+        if len(work_list) == self.size:
             return True
         else:
             return False
+
+    def if_win(self, mark):
+        return self.win_in_row(mark) or self.win_in_col(mark) or self.win_in_cross(mark)
